@@ -12,6 +12,11 @@
 mvn clean spring-boot:run
 ```
 
+### Test Runner
+```shell
+mvn clean test -DInfoApiTests
+```
+
 
 |        | URL             |
 | -------------- | ---------          |
