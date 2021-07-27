@@ -19,12 +19,18 @@
 	<properties>
 		<java.version>16</java.version>
 		<spring-cloud.version>2020.0.4-SNAPSHOT</spring-cloud.version>
+		<wiremock.version>2.27.2</wiremock.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 
 		<dependency>
@@ -53,6 +59,14 @@
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
 			<version>2.3.1</version>
+		</dependency>
+
+		<!-- wiremock -->
+		<dependency>
+			<groupId>com.github.tomakehurst</groupId>
+			<artifactId>wiremock-jre8</artifactId>
+			<version>${wiremock.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
