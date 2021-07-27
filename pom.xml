@@ -68,6 +68,14 @@
 			<version>${wiremock.version}</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- junit5 -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.7.2</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>

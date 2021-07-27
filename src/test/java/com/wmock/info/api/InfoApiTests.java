@@ -1,37 +1,39 @@
-package com.wmock.info;
+package com.wmock.info.api;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.wmock.info.tags.ApiTest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, classes = Application.class)
-@AutoConfigureWebTestClient(timeout = "25000")
+@ApiTest
 class InfoApiTests {
 
 	@Autowired
 	private WebTestClient webTestClient;
 
+	@Value("${wiremock.port:2222}")
+	private Integer wmPort;
+
 	private static WireMockServer wireMockServer;
 
 	@BeforeAll
-	static void startWireMock() {
-		wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(1111));
+	void startWireMock() {
+		wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(wmPort));
 		wireMockServer.start();
 	}
 
 	@AfterAll
-	static void stopWireMock() {
+	void stopWireMock() {
 		wireMockServer.stop();
 	}
 
@@ -63,7 +65,7 @@ class InfoApiTests {
 
 		webTestClient
 				.get()
-				.uri("http://localhost:1111/api/chapter/1")
+				.uri("http://localhost:"+wmPort+"/api/chapter/1")
 				.exchange()
 				.expectStatus().isOk();
 	}
