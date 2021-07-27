@@ -2,14 +2,11 @@ package com.wmock.info.api;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.wmock.info.tags.ApiTest;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
@@ -21,16 +18,8 @@ class InfoApiTests {
 	@Autowired
 	private WebTestClient webTestClient;
 
-	@Value("${wiremock.port:2222}")
-	private Integer wmPort;
-
-	private static WireMockServer wireMockServer;
-
-	@BeforeAll
-	void startWireMock() {
-		wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(wmPort));
-		wireMockServer.start();
-	}
+	@Autowired
+	private WireMockServer wireMockServer;
 
 	@AfterAll
 	void stopWireMock() {
@@ -65,7 +54,7 @@ class InfoApiTests {
 
 		webTestClient
 				.get()
-				.uri("http://localhost:"+wmPort+"/api/chapter/1")
+				.uri(wireMockServer.baseUrl()+"/api/chapter/1")
 				.exchange()
 				.expectStatus().isOk();
 	}
