@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import static io.restassured.RestAssured.given;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.hamcrest.Matchers.*;
 
 @ApiTest
 class InfoApiTests {
@@ -37,14 +39,15 @@ class InfoApiTests {
 	void responseBodyTest() {
 		wireMockServer.stubFor(
 			WireMock.get("/api/chapter/1")
+				.inScenario("responseBodyTest")
 				.willReturn(aResponse()
-						.withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-						.withBody("{\n" +
-								"  \"chapterId\": \"1\",\n" +
-								"  \"name\": \"Genesis\"\n" +
-								"}")
-						.withStatus(200)
-						.withFixedDelay(1000)
+					.withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+					.withBody("{\n" +
+							"  \"chapterId\": \"1\",\n" +
+							"  \"name\": \"Genesis\"\n" +
+							"}")
+					.withStatus(200)
+					.withFixedDelay(1000)
 				)
 		);
 
@@ -52,32 +55,40 @@ class InfoApiTests {
 		assert(wireMockServer.isRunning());
 
 		webTestClient
-				.get()
-				.uri(wireMockServer.baseUrl()+"/api/chapter/1")
-				.exchange()
-				.expectStatus().isOk();
+			.get()
+			.uri(wireMockServer.baseUrl()+"/api/chapter/1")
+			.exchange()
+			.expectStatus().isOk();
 	}
 
 	@Test
 	void responseBodyFileTest() {
 		wireMockServer.stubFor(
-				WireMock.get("/api/chapter/1")
-						.willReturn(aResponse()
-										.withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-										.withBodyFile("response/data.json")
-										.withStatus(200)
-										.withFixedDelay(1000)
-						)
+			WireMock.get("/api/chapter/1")
+				.inScenario("responseBodyFileTest")
+				.willReturn(aResponse()
+								.withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+								.withBodyFile("response/data.json")
+								.withStatus(200)
+								.withFixedDelay(1000)
+				)
 		);
 
 		System.out.println(wireMockServer.baseUrl());
+		System.out.println(wireMockServer.port());
 		assert(wireMockServer.isRunning());
 
 		webTestClient
-				.get()
-				.uri(wireMockServer.baseUrl()+"/api/chapter/1")
-				.exchange()
-				.expectStatus().isOk();
+			.get()
+			.uri(wireMockServer.baseUrl()+"/api/chapter/1")
+			.exchange()
+			.expectStatus().isOk();
+
+		given()
+		.when()
+			.get(wireMockServer.baseUrl()+"/api/chapter/1")
+		.then()
+			.body("name", response -> containsString("Genesis"));
 	}
 
 }
