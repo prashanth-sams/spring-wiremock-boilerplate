@@ -34,7 +34,7 @@ class InfoApiTests {
 	}
 
 	@Test
-	void contextLoads() {
+	void responseBodyTest() {
 		wireMockServer.stubFor(
 			WireMock.get("/api/chapter/1")
 				.willReturn(aResponse()
@@ -43,10 +43,31 @@ class InfoApiTests {
 								"  \"chapterId\": \"1\",\n" +
 								"  \"name\": \"Genesis\"\n" +
 								"}")
-//						.withBodyFile("response/data.json")
 						.withStatus(200)
 						.withFixedDelay(1000)
 				)
+		);
+
+		System.out.println(wireMockServer.baseUrl());
+		assert(wireMockServer.isRunning());
+
+		webTestClient
+				.get()
+				.uri(wireMockServer.baseUrl()+"/api/chapter/1")
+				.exchange()
+				.expectStatus().isOk();
+	}
+
+	@Test
+	void responseBodyFileTest() {
+		wireMockServer.stubFor(
+				WireMock.get("/api/chapter/1")
+						.willReturn(aResponse()
+										.withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+										.withBodyFile("response/data.json")
+										.withStatus(200)
+										.withFixedDelay(1000)
+						)
 		);
 
 		System.out.println(wireMockServer.baseUrl());
