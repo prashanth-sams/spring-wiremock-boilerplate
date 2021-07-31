@@ -24,7 +24,7 @@ class InfoApiTests {
 	@Autowired
 	private WebTestClient webTestClient;
 
-	private static WireMockServer wireMockServer;
+	private WireMockServer wireMockServer;
 
 	@Value("${wiremock.port:2222}")
 	private Integer wmPort;
