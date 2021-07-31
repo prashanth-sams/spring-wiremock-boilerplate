@@ -14,7 +14,7 @@ mvn clean spring-boot:run
 
 ### Test Runner
 ```shell
-mvn clean test -DInfoApiTests
+mvn clean test -Dcom.wmock.info.api
 ```
 
 
