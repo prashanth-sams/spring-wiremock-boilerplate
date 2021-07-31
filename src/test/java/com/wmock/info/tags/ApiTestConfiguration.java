@@ -16,9 +16,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Tag("ApiTest")
+@Tag("ApiTestConfiguration")
 @SpringBootTest(classes = Application.class,
-        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = { "server.port=1111"})
 @AutoConfigureWebTestClient(timeout = "25000")
 @ExtendWith(SpringExtension.class)
@@ -26,5 +26,5 @@ import java.lang.annotation.RetentionPolicy;
 @DirtiesContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ContextConfiguration(initializers = {WireMockInitializer.class})
-public @interface ApiTest {
+public @interface ApiTestConfiguration {
 }
