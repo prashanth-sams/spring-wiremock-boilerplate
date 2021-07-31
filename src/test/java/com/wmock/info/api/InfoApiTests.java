@@ -1,10 +1,14 @@
 package com.wmock.info.api;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.wmock.info.tags.ApiTestConfiguration;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import io.restassured.response.Response;
@@ -17,9 +21,30 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ApiTestConfiguration
 class InfoApiTests {
 
-	@Autowired WebTestClient webTestClient;
+	@Autowired
+	private WebTestClient webTestClient;
 
-	@Autowired WireMockServer wireMockServer;
+	private static WireMockServer wireMockServer;
+
+	@Value("${wiremock.port:2222}")
+	private Integer wmPort;
+
+	@BeforeAll
+	void startWireMock() {
+		wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(wmPort));
+		wireMockServer.start();
+	}
+
+	@AfterAll
+	void stopWireMock() {
+		wireMockServer.stop();
+	}
+
+	void clearWireMock() {
+		System.out.println("Stored stubbings: " + wireMockServer.getStubMappings().size());
+		wireMockServer.resetAll();
+		System.out.println("Stored stubbings after reset: " + wireMockServer.getStubMappings().size());
+	}
 
 	@BeforeEach
 	void initStubs() {
@@ -50,12 +75,6 @@ class InfoApiTests {
 				)
 		);
 
-	}
-
-	void clearWireMock() {
-		System.out.println("Stored stubbings: " + wireMockServer.getStubMappings().size());
-		wireMockServer.resetAll();
-		System.out.println("Stored stubbings after reset: " + wireMockServer.getStubMappings().size());
 	}
 
 	@Test

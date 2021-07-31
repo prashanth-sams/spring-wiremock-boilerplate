@@ -1,7 +1,7 @@
 package com.wmock.info.api;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.wmock.info.tags.ApiTestConfiguration;
+import com.wmock.info.tags.ApiTestOptimizedConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 
-@ApiTestConfiguration
+@ApiTestOptimizedConfig
 class InfoOptimizedApiTests {
 
 	@Autowired WebTestClient webTestClient;
