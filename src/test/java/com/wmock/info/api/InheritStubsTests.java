@@ -52,12 +52,12 @@ class InheritStubsTests extends StubGenerator {
 	@Test
 	void reusableStubResponseTest() {
 		webTestClient
-				.get()
-				.uri(wireMockServer.baseUrl()+"/v2?nt=2")
-				.exchange()
-				.expectStatus().isOk()
-				.expectStatus().is2xxSuccessful()
-				.expectBody().jsonPath("name").isEqualTo("Mark");
+			.get()
+			.uri(wireMockServer.baseUrl()+"/v2?nt=2")
+			.exchange()
+			.expectStatus().isOk()
+			.expectStatus().is2xxSuccessful()
+			.expectBody().jsonPath("name").isEqualTo("Mark");
 	}
 
 }
