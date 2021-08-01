@@ -37,4 +37,4 @@ build/
 ### VS Code ###
 .vscode/
 
-src/test/java/com/wmock/info/stubs
+src/test/java/com/wmock/info/stubs/initializer.java
