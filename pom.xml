@@ -15,7 +15,7 @@
 	<name>spring-boot-wiremock-boilerplate</name>
 	<description>Bible Chapter Info Service</description>
 	<properties>
-		<java.version>8</java.version>
+		<java.version>16</java.version>
 		<spring-cloud.version>2020.0.3</spring-cloud.version>
 		<wiremock.version>2.27.2</wiremock.version>
 	</properties>
