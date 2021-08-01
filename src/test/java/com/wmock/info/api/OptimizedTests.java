@@ -1,28 +1,22 @@
 package com.wmock.info.api;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.wmock.info.tags.ApiTest;
-import io.restassured.response.ResponseBody;
+import com.wmock.info.tags.ApiTestOptimizedConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import io.restassured.response.Response;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
 
-@ApiTest
-class InfoApiTests {
+@ApiTestOptimizedConfig
+class OptimizedTests {
 
-	@Autowired
-	private WebTestClient webTestClient;
+	@Autowired WebTestClient webTestClient;
 
-	@Autowired
-	private WireMockServer wireMockServer;
+	@Autowired WireMockServer wireMockServer;
 
 	@BeforeEach
 	void initStubs() {
@@ -62,28 +56,6 @@ class InfoApiTests {
 	}
 
 	@Test
-	void responseBodyTest() {
-		System.out.println(wireMockServer.baseUrl());
-		assert(wireMockServer.isRunning());
-
-		webTestClient
-			.get()
-			.uri(wireMockServer.baseUrl()+"/v1/1")
-			.exchange()
-			.expectStatus().isOk();
-
-		Response resp = given().log().all()
-				.when().get(wireMockServer.baseUrl()+"/v1/1");
-		assertEquals(resp.getStatusCode(), 200);
-
-		ResponseBody body = resp.getBody();
-		assertEquals(body.asString(), "{\n" +
-				"  \"chapterId\": \"1\",\n" +
-				"  \"name\": \"Genesis\"\n" +
-				"}");
-	}
-
-	@Test
 	void responseBodyFileTest() {
 		System.out.println(wireMockServer.baseUrl());
 		System.out.println(wireMockServer.port());
@@ -92,13 +64,9 @@ class InfoApiTests {
 			.get()
 			.uri(wireMockServer.baseUrl()+"/v1/2")
 			.exchange()
-			.expectStatus().isOk();
-
-		given()
-		.when()
-			.get(wireMockServer.baseUrl()+"/v1/2")
-		.then()
-			.body("name", response -> containsString("Exodus"));
+			.expectStatus().isOk()
+			.expectStatus().is2xxSuccessful()
+			.expectBody().jsonPath("name").isEqualTo("Exodus");
 	}
 
 }
