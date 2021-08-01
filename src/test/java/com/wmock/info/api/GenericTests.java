@@ -19,7 +19,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ApiTestConfiguration
-class InfoApiTests {
+class GenericTests {
 
 	@Autowired
 	private WebTestClient webTestClient;
