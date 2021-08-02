@@ -21,138 +21,116 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @ApiTestConfiguration
 class GenericTests {
 
-  @Autowired
-  private WebTestClient webTestClient;
+    @Autowired
+    private WebTestClient webTestClient;
 
-  private WireMockServer wireMockServer;
+    private WireMockServer wireMockServer;
 
-  @Value("${wiremock.port:2222}")
-  private Integer wmPort;
+    @Value("${wiremock.port:2222}")
+    private Integer wmPort;
 
-  @BeforeAll
-  void startWireMock() {
-    wireMockServer =
-      new WireMockServer(WireMockConfiguration.wireMockConfig().port(wmPort));
-    wireMockServer.start();
-  }
+    @BeforeAll
+    void startWireMock() {
+        wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(wmPort));
+        wireMockServer.start();
+    }
 
-  @AfterAll
-  void stopWireMock() {
-    wireMockServer.stop();
-  }
+    @AfterAll
+    void stopWireMock() {
+        wireMockServer.stop();
+    }
 
-  void clearWireMock() {
-    System.out.println(
-      "Stored stubbings: " + wireMockServer.getStubMappings().size()
-    );
-    wireMockServer.resetAll();
-    System.out.println(
-      "Stored stubbings after reset: " + wireMockServer.getStubMappings().size()
-    );
-  }
+    void clearWireMock() {
+        System.out.println("Stored stubbings: " + wireMockServer.getStubMappings().size());
+        wireMockServer.resetAll();
+        System.out.println("Stored stubbings after reset: " + wireMockServer.getStubMappings().size());
+    }
 
-  @BeforeEach
-  void initStubs() {
-    clearWireMock();
+    @BeforeEach
+    void initStubs() {
+        clearWireMock();
 
-    wireMockServer.stubFor(
-      get("/v1/1")
-        .inScenario("responseBodyTest")
-        .willReturn(
-          aResponse()
-            .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-            .withBody(
-              "{\n" +
-              "  \"chapterId\": \"1\",\n" +
-              "  \"name\": \"Genesis\"\n" +
-              "}"
-            )
-            .withStatus(200)
-            .withFixedDelay(1000)
-        )
-    );
+        wireMockServer.stubFor(
+            get("/v1/1")
+                .inScenario("responseBodyTest")
+                .willReturn(
+                    aResponse()
+                        .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(
+                                "{\n" +
+                                "  \"chapterId\": \"1\",\n" +
+                                "  \"name\": \"Genesis\"\n" +
+                                "}"
+                        )
+                        .withStatus(200)
+                        .withFixedDelay(1000)
+                )
+        );
 
-    wireMockServer.stubFor(
-      get("/v1/2")
-        .inScenario("responseBodyFileTest")
-        .willReturn(
-          aResponse()
-            .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-            .withBodyFile("response/data.json")
-            .withStatus(200)
-            .withFixedDelay(1000)
-        )
-    );
+        wireMockServer.stubFor(
+            get("/v1/2")
+                .inScenario("responseBodyFileTest")
+                .willReturn(
+                    aResponse()
+                        .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                        .withBodyFile("response/data.json")
+                        .withStatus(200)
+                        .withFixedDelay(1000)
+                )
+        );
 
-    wireMockServer.stubFor(
-      post("/v1/newChapter")
-        .inScenario("responseStatusPostTest")
-        .willReturn(unauthorized())
-    );
-  }
+        wireMockServer.stubFor(
+            post("/v1/newChapter")
+                .inScenario("responseStatusPostTest")
+                .willReturn(unauthorized())
+        );
 
-  @Test
-  void responseStatusPostTest() {
-    System.out.println(wireMockServer.baseUrl());
-    assert (wireMockServer.isRunning());
+        System.out.println(wireMockServer.baseUrl());
+        System.out.println(wireMockServer.port());
+        assert (wireMockServer.isRunning());
+    }
 
-    webTestClient
-      .post()
-      .uri(wireMockServer.baseUrl() + "/v1/newChapter")
-      .exchange()
-      .expectStatus()
-      .isUnauthorized();
+    @Test
+    void responseBodyTest() {
+        webTestClient
+            .get().uri(wireMockServer.baseUrl() + "/v1/1")
+            .exchange()
+            .expectStatus().isOk();
 
-    Response resp = given()
-      .log()
-      .all()
-      .when()
-      .post(wireMockServer.baseUrl() + "/v1/newChapter");
-    assertEquals(resp.getStatusCode(), 401);
-  }
+        Response resp = given().log().all()
+            .when()
+            .get(wireMockServer.baseUrl() + "/v1/1");
+        assertEquals(resp.getStatusCode(), 200);
 
-  @Test
-  void responseBodyTest() {
-    System.out.println(wireMockServer.baseUrl());
-    assert (wireMockServer.isRunning());
+        var body = resp.getBody();
+        assertEquals(body.asString(), "{\n" + "  \"chapterId\": \"1\",\n" + "  \"name\": \"Genesis\"\n" + "}");
+    }
 
-    webTestClient
-      .get()
-      .uri(wireMockServer.baseUrl() + "/v1/1")
-      .exchange()
-      .expectStatus()
-      .isOk();
+    @Test
+    void responseBodyFileTest() {
+      webTestClient
+          .get().uri(wireMockServer.baseUrl() + "/v1/2")
+          .exchange()
+          .expectStatus().isOk();
 
-    Response resp = given()
-      .log()
-      .all()
-      .when()
-      .get(wireMockServer.baseUrl() + "/v1/1");
-    assertEquals(resp.getStatusCode(), 200);
+      given()
+          .when()
+          .get(wireMockServer.baseUrl() + "/v1/2")
+          .then()
+          .body("name", response -> containsString("Exodus"));
+    }
 
-    var body = resp.getBody();
-    assertEquals(
-      body.asString(),
-      "{\n" + "  \"chapterId\": \"1\",\n" + "  \"name\": \"Genesis\"\n" + "}"
-    );
-  }
+    @Test
+    void responseStatusPostTest() {
+      webTestClient
+          .post().uri(wireMockServer.baseUrl() + "/v1/newChapter")
+          .exchange()
+          .expectStatus().isUnauthorized();
 
-  @Test
-  void responseBodyFileTest() {
-    System.out.println(wireMockServer.baseUrl());
-    System.out.println(wireMockServer.port());
+      Response resp = given().log().all()
+          .when()
+          .post(wireMockServer.baseUrl() + "/v1/newChapter");
+      assertEquals(resp.getStatusCode(), 401);
+    }
 
-    webTestClient
-      .get()
-      .uri(wireMockServer.baseUrl() + "/v1/2")
-      .exchange()
-      .expectStatus()
-      .isOk();
-
-    given()
-      .when()
-      .get(wireMockServer.baseUrl() + "/v1/2")
-      .then()
-      .body("name", response -> containsString("Exodus"));
-  }
 }
