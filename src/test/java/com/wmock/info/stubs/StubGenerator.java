@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.util.List;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.wmock.info.stubs.UrlMappingRules.patternForNewTestament;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -20,6 +22,7 @@ public class StubGenerator {
         firstChapter();
         secondChapter();
         newTestamentChapter();
+        reusableStubResponse();
     }
 
     public StubMapping firstChapter() {
@@ -64,5 +67,28 @@ public class StubGenerator {
                         .withFixedDelay(1000)
                 )
         );
+    }
+
+    public StubMapping reusableStubResponse() {
+        return wireMockServer.stubFor(get(urlPathEqualTo("/v2"))
+                .inScenario("dynamicResponseSource")
+                .withQueryParam("nt", equalTo("2"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                        .withStatus(SC_OK)
+                        .withBody(chapterDetailsNT(2))
+                        .withFixedDelay(1000)
+                )
+        );
+    }
+
+    private String chapterDetailsNT(int id) {
+        var chapters = List.of("Matthew", "Mark", "Luke");
+        var chapter = chapters.get(id-1);
+
+        return "{\n" +
+                "  \"chapterId\": \""+id+"\",\n" +
+                "  \"name\": \""+chapter+"\"\n" +
+                "}";
     }
 }

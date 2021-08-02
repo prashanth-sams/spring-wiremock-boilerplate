@@ -49,4 +49,15 @@ class InheritStubsTests extends StubGenerator {
 			.expectBody().jsonPath("name").isEqualTo("Matthew");
 	}
 
+	@Test
+	void reusableStubResponseTest() {
+		webTestClient
+			.get()
+			.uri(wireMockServer.baseUrl()+"/v2?nt=2")
+			.exchange()
+			.expectStatus().isOk()
+			.expectStatus().is2xxSuccessful()
+			.expectBody().jsonPath("name").isEqualTo("Mark");
+	}
+
 }
