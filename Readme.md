@@ -5,7 +5,7 @@
 | Global Tags Configuration        | :white_check_mark: | Singleton MockServer Initializer         | :white_check_mark: | Stub Initializer        | :white_check_mark: |
 | Stub Mapping      | :white_check_mark: | URL Mapping Rules      | :white_check_mark: | Stub QueryParam      | :white_check_mark: |
 | Reusable Stub Response      | :white_check_mark: | REST Assured Validations      | :white_check_mark: | Spring ActiveProfiles      | :white_check_mark: |
-| Dynamic Port Handler      | :white_check_mark: | Custom Port Handler      | :white_check_mark: |
+| Dynamic Port Handler      | :white_check_mark: | Custom Port Handler      | :white_check_mark: | Stub withRequestBody | :white_check_mark: |
 
 ### Application Runner
 ```shell

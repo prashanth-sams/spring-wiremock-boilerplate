@@ -23,6 +23,7 @@ public class StubGenerator {
         secondChapter();
         newTestamentChapter();
         reusableStubResponse();
+        createChapter();
     }
 
     public StubMapping firstChapter() {
@@ -82,6 +83,7 @@ public class StubGenerator {
         );
     }
 
+    /* reusable response */
     private String chapterDetailsNT(int id) {
         var chapters = List.of("Matthew", "Mark", "Luke");
         var chapter = chapters.get(id-1);
@@ -90,5 +92,24 @@ public class StubGenerator {
                 "  \"chapterId\": \""+id+"\",\n" +
                 "  \"name\": \""+chapter+"\"\n" +
                 "}";
+    }
+
+    public StubMapping createChapter() {
+        return wireMockServer.stubFor(post(urlPathEqualTo("/v1/newChapter3"))
+                .inScenario("createChapter")
+                .withRequestBody(equalToJson("{\n" +
+                        "  \"chapterId\": \"3\",\n" +
+                        "  \"name\": \"Luke\"\n" +
+                        "}"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                        .withStatus(SC_OK)
+                        .withBody("{\n" +
+                                "  \"chapterId\": \"3\",\n" +
+                                "  \"name\": \"Luke\"\n" +
+                                "  \"created\": \"1\"\n" +
+                                "}")
+                )
+        );
     }
 }
