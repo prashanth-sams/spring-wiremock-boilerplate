@@ -3,6 +3,7 @@ package com.wmock.info.api;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.wmock.info.stubs.StubGenerator;
 import com.wmock.info.tags.ApiTestOptimizedConfig;
+import org.apache.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @ApiTestOptimizedConfig
 class InheritStubsTests extends StubGenerator {
+	private static final Logger LOGGER = Logger.getLogger(InheritStubsTests.class.getName());
 
 	@Autowired WebTestClient webTestClient;
 
@@ -22,9 +24,9 @@ class InheritStubsTests extends StubGenerator {
 	}
 
 	void clearWireMock() {
-		System.out.println("Stored stubbings: " + wireMockServer.getStubMappings().size());
+		LOGGER.info("Stored stubbings: " + wireMockServer.getStubMappings().size());
 		wireMockServer.resetAll();
-		System.out.println("Stored stubbings after reset: " + wireMockServer.getStubMappings().size());
+		LOGGER.info("Stored stubbings after reset: " + wireMockServer.getStubMappings().size());
 	}
 
 	@Test

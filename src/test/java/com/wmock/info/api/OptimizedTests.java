@@ -2,6 +2,7 @@ package com.wmock.info.api;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.wmock.info.tags.ApiTestOptimizedConfig;
+import org.apache.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 
 @ApiTestOptimizedConfig
 class OptimizedTests {
+	private static final Logger LOGGER = Logger.getLogger(OptimizedTests.class.getName());
 
 	@Autowired WebTestClient webTestClient;
 
@@ -47,19 +49,19 @@ class OptimizedTests {
 				)
 		);
 
+		LOGGER.info(wireMockServer.port());
+		LOGGER.info(wireMockServer.baseUrl());
+
 	}
 
 	void clearWireMock() {
-		System.out.println("Stored stubbings: " + wireMockServer.getStubMappings().size());
+		LOGGER.info("Stored stubbings: " + wireMockServer.getStubMappings().size());
 		wireMockServer.resetAll();
-		System.out.println("Stored stubbings after reset: " + wireMockServer.getStubMappings().size());
+		LOGGER.info("Stored stubbings after reset: " + wireMockServer.getStubMappings().size());
 	}
 
 	@Test
 	void responseBodyFileTest() {
-		System.out.println(wireMockServer.baseUrl());
-		System.out.println(wireMockServer.port());
-
 		webTestClient
 			.get()
 			.uri(wireMockServer.baseUrl()+"/v1/2")
