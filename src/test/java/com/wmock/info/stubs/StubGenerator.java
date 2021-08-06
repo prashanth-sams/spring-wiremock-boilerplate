@@ -24,6 +24,9 @@ public class StubGenerator {
         newTestamentChapter();
         reusableStubResponse();
         createChapter();
+        createChapter4();
+        createChapter5();
+        createChapter6();
     }
 
     public StubMapping firstChapter() {
@@ -33,10 +36,11 @@ public class StubGenerator {
                 .willReturn(aResponse()
                     .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                     .withStatus(SC_OK)
-                    .withBody("{\n" +
-                        "  \"chapterId\": \"1\",\n" +
-                        "  \"name\": \"Genesis\"\n" +
-                        "}")
+                    .withBody("""
+                            {
+                              "chapterId": "1",
+                              "name": "Genesis"
+                            }""")
                     .withFixedDelay(1000)
                 )
         );
@@ -61,10 +65,11 @@ public class StubGenerator {
                 .willReturn(aResponse()
                         .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                         .withStatus(SC_OK)
-                        .withBody("{\n" +
-                            "  \"chapterId\": \"1\",\n" +
-                            "  \"name\": \"Matthew\"\n" +
-                            "}")
+                        .withBody("""
+                                {
+                                  "chapterId": "1",
+                                  "name": "Matthew"
+                                }""")
                         .withFixedDelay(1000)
                 )
         );
@@ -97,18 +102,83 @@ public class StubGenerator {
     public StubMapping createChapter() {
         return wireMockServer.stubFor(post(urlPathEqualTo("/v1/newChapter3"))
                 .inScenario("createChapter")
-                .withRequestBody(equalToJson("{\n" +
-                        "  \"chapterId\": \"3\",\n" +
-                        "  \"name\": \"Luke\"\n" +
-                        "}"))
+                .withRequestBody(equalToJson("""
+                        {
+                          "chapterId": "3",
+                          "name": "Luke"
+                        }"""))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                         .withStatus(SC_OK)
-                        .withBody("{\n" +
-                                "  \"chapterId\": \"3\",\n" +
-                                "  \"name\": \"Luke\"\n" +
-                                "  \"created\": \"1\"\n" +
-                                "}")
+                        .withBody("""
+                                {
+                                  "chapterId": "3",
+                                  "name": "Luke"
+                                  "created": "1"
+                                }""")
+                )
+        );
+    }
+
+    public StubMapping createChapter4() {
+        return wireMockServer.stubFor(post(urlPathEqualTo("/v1/newChapter4"))
+                .inScenario("createChapter4")
+                .withRequestBody(equalToJson("""
+                        {
+                          "chapterId": 4,
+                          "name": "John"
+                        }"""))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                        .withStatus(SC_OK)
+                        .withBody("""
+                                {
+                                  "chapterId": "4",
+                                  "name": "John"
+                                  "created": "1"
+                                }""")
+                )
+        );
+    }
+
+    public StubMapping createChapter5() {
+        return wireMockServer.stubFor(post(urlPathEqualTo("/v1/newChapter5"))
+                .inScenario("createChapter5")
+                .withRequestBody(equalToJson("""
+                        {
+                          "chapterId": 5,
+                          "name": "Acts"
+                        }"""))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                        .withStatus(SC_OK)
+                        .withBody("""
+                                {
+                                  "chapterId": "5",
+                                  "name": "Acts"
+                                  "created": "1"
+                                }""")
+                )
+        );
+    }
+
+    public StubMapping createChapter6() {
+        return wireMockServer.stubFor(post(urlPathEqualTo("/v1/newChapter6"))
+                .inScenario("createChapter5")
+                .withRequestBody(equalToJson("""
+                        {
+                          "chapterId": 6,
+                          "name": "Romans"
+                        }"""))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                        .withStatus(SC_OK)
+                        .withBody("""
+                                {
+                                  "chapterId": "6",
+                                  "name": "Romans"
+                                  "created": "1"
+                                }""")
                 )
         );
     }

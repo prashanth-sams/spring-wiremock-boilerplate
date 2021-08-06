@@ -29,10 +29,11 @@ class OptimizedTests {
 				.inScenario("responseBodyTest")
 				.willReturn(aResponse()
 					.withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-					.withBody("{\n" +
-							"  \"chapterId\": \"1\",\n" +
-							"  \"name\": \"Genesis\"\n" +
-							"}")
+					.withBody("""
+							{
+							  "chapterId": "1",
+							  "name": "Genesis"
+							}""")
 					.withStatus(200)
 					.withFixedDelay(1000)
 				)
