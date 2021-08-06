@@ -1,8 +1,9 @@
 package com.wmock.info.api;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.wmock.info.pojo.Chapter4RequestDTO;
-import com.wmock.info.pojo.Chapter5RequestDTO;
+import com.wmock.info.dto.Chapter4RequestDTO;
+import com.wmock.info.dto.Chapter5RequestDTO;
+import com.wmock.info.dto.Chapter6RequestDTO;
 import com.wmock.info.stubs.StubGenerator;
 import com.wmock.info.tags.ApiTestOptimizedConfig;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,6 +74,17 @@ class PojoPayloadTests extends StubGenerator {
             .post()
             .uri(wireMockServer.baseUrl() + "/v1/newChapter5")
             .body(BodyInserters.fromValue(chapter5RequestDTO))
+            .exchange()
+            .expectStatus().isOk();
+
+        /* avoid explicitly writing getter and setter methods in the DTO */
+        Chapter6RequestDTO chapter6RequestDTO = new Chapter6RequestDTO();
+        chapter6RequestDTO.setChapterId(6);
+        chapter6RequestDTO.setName("Romans");
+        webTestClient
+            .post()
+            .uri(wireMockServer.baseUrl() + "/v1/newChapter6")
+            .body(BodyInserters.fromValue(chapter6RequestDTO))
             .exchange()
             .expectStatus().isOk();
     }

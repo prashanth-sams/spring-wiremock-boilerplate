@@ -1,4 +1,4 @@
-package com.wmock.info.pojo;
+package com.wmock.info.dto;
 
 public class Chapter4RequestDTO {
 

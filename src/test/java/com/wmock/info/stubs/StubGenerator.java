@@ -26,6 +26,7 @@ public class StubGenerator {
         createChapter();
         createChapter4();
         createChapter5();
+        createChapter6();
     }
 
     public StubMapping firstChapter() {
@@ -155,6 +156,27 @@ public class StubGenerator {
                                 {
                                   "chapterId": "5",
                                   "name": "Acts"
+                                  "created": "1"
+                                }""")
+                )
+        );
+    }
+
+    public StubMapping createChapter6() {
+        return wireMockServer.stubFor(post(urlPathEqualTo("/v1/newChapter6"))
+                .inScenario("createChapter5")
+                .withRequestBody(equalToJson("""
+                        {
+                          "chapterId": 6,
+                          "name": "Romans"
+                        }"""))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                        .withStatus(SC_OK)
+                        .withBody("""
+                                {
+                                  "chapterId": "6",
+                                  "name": "Romans"
                                   "created": "1"
                                 }""")
                 )
