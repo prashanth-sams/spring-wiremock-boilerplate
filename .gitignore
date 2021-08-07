@@ -38,4 +38,5 @@ build/
 .vscode/
 
 src/test/java/com/wmock/info/stubs/initializer.java
+src/test/java/com/wmock/info/dto/Chapter7RequestDTO.java
 logs/
