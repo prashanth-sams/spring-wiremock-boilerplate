@@ -88,20 +88,6 @@ class PojoPayloadTests extends StubGenerator {
                 .body(BodyInserters.fromValue(chapter6RequestDTO))
                 .exchange()
                 .expectStatus().isOk();
-
-//        /* using builder to set values in the DTO */
-//        Chapter7RequestDTO chapter7RequestDTO = Chapter7RequestDTO
-//                .builder()
-//                .chapterId(7)
-//                .name("Corinthians")
-//                .build();
-//
-//        webTestClient
-//                .post()
-//                .uri(wireMockServer.baseUrl() + "/v1/newChapter7")
-//                .body(BodyInserters.fromValue(chapter7RequestDTO.toString()))
-//                .exchange()
-//                .expectStatus().isOk();
     }
 
 }
