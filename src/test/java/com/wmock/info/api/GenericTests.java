@@ -9,7 +9,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.wmock.info.tags.ApiTestConfiguration;
 import io.restassured.response.Response;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,9 +19,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+
+@Log4j
 @ApiTestConfiguration
 class GenericTests {
-    private static final Logger LOGGER = Logger.getLogger(GenericTests.class.getName());
 
     @Autowired
     private WebTestClient webTestClient;
@@ -43,9 +44,9 @@ class GenericTests {
     }
 
     void clearWireMock() {
-        LOGGER.info("Stored stubbings: " + wireMockServer.getStubMappings().size());
+        log.info("Stored stubbings: " + wireMockServer.getStubMappings().size());
         wireMockServer.resetAll();
-        LOGGER.info("Stored stubbings after reset: " + wireMockServer.getStubMappings().size());
+        log.info("Stored stubbings after reset: " + wireMockServer.getStubMappings().size());
     }
 
     @BeforeEach
@@ -86,8 +87,8 @@ class GenericTests {
                 .willReturn(unauthorized())
         );
 
-        LOGGER.info(wireMockServer.port());
-        LOGGER.info(wireMockServer.baseUrl());
+        log.info(wireMockServer.port());
+        log.info(wireMockServer.baseUrl());
         assert (wireMockServer.isRunning());
     }
 

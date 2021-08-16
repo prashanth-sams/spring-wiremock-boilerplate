@@ -164,7 +164,7 @@ public class StubGenerator {
 
     public StubMapping createChapter6() {
         return wireMockServer.stubFor(post(urlPathEqualTo("/v1/newChapter6"))
-                .inScenario("createChapter5")
+                .inScenario("createChapter6")
                 .withRequestBody(equalToJson("""
                         {
                           "chapterId": 6,
